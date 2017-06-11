@@ -34,7 +34,7 @@ export default class ProductsDetail extends Component{
 
     toProductsDetail(){
         console.log(window.location.hash);
-        window.hash = '#/products';
+        window.location.hash = '#/products?goodsid=12456';
     }
 
     render(){
