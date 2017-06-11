@@ -1,0 +1,7 @@
+@charset "UTF-8";
+.productDetails:after{
+    content:'';
+    display: block;
+    height:0;
+    clear: both;
+}
