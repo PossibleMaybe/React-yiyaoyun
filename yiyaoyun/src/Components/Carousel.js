@@ -42,8 +42,7 @@ export default class Carousel1 extends Component {
                     infinite
                     selectedIndex={0}
                     swipeSpeed={35}
-                    beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-                    afterChange={index => console.log('slide to', index)}
+
                 >
                     {this.state.bannerImg.map((ii,index) => {
 
