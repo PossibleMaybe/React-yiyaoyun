@@ -32,9 +32,9 @@ export default class ProductsDetail extends Component{
             })});
     }
 
-    toProductsDetail(){
-        console.log(window.location.hash);
-        window.location.hash = '#/products?goodsid=12456';
+    toProductsDetail(DRUG_CODE,supplycode){
+        console.log(DRUG_CODE,supplycode);
+        window.location.hash = '#/products?goodsid='+DRUG_CODE+'&supplycode='+supplycode;
     }
 
     render(){
@@ -43,7 +43,7 @@ export default class ProductsDetail extends Component{
             <div className="productDetails">
                 {
                     this.state.productDetails.map((ele,index)=>(
-                        <div className="wrapper" key={index} style={styles.item} onClick={this.toProductsDetail}>
+                        <div className="wrapper" key={index} style={styles.item} onClick={()=>{this.toProductsDetail(ele.DRUG_CODE,ele.DRUG_SUPPLIER_CODE)}}>
                             <div >
                                 <img src={ele.DRUG_IMG_URL} style={styles.img} alt=""/>
                                 <span style={{width:'100%',display:'block',height:'26px'}}>{ele.NAME}</span>
