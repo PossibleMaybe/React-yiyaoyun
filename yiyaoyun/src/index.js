@@ -6,6 +6,7 @@ import {Router,
 
 import App from './App';
 import ProductsDetail from './ProductsDetail';
+import ShopCart from './ShopCart';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
@@ -14,6 +15,7 @@ ReactDOM.render(
         <div>
             <Route path="/" component={App}/>
             <Route path="/products" component={ProductsDetail}/>
+            <Route path="/shopcart" component={ShopCart} />
         </div>
 
 

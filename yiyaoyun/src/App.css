@@ -10,8 +10,12 @@ p,div{
 .App {
   text-align: center;
 }
-
-
+html,body{
+  height:100%;
+}
+#root{
+  height:100%;
+}
 #header {
   position: absolute;
   left:0;
