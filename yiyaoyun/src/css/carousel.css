@@ -1,4 +1,4 @@
 @charset "UTF-8";
-.slider-list {
-    transform:translate3d(0,0,0);
+.myCarousel{
+    height:200px!important;
 }
