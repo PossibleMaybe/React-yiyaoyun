@@ -23,6 +23,7 @@ export default class ProductsDetail extends Component {
         super(props);
         this.state = {
             detailImg:[],
+            mainDetail:{},
         }
     }
 
@@ -36,13 +37,17 @@ export default class ProductsDetail extends Component {
         console.log(DRUGSUPPLIERCODE);
         var enResult = strEnc("[{\"groupCode\":\"" + insureCode + "\",\"drugCode\":\"" + DRUGCODE + "\",\"pharmacyCode\":\"" + DRUGSUPPLIERCODE + "\",\"yyyCode\":\"100013\"}]", "100001", "", "");
 
-        fetch("http://218.80.250.92:56679/healthy_service/healthy/dispatchV2",{method:'post',mode:"no-cor",body:enResult}).then(response => response.json()).then(responseData => {console.log(responseData);this.setState({detailImg:responseData.data.DRUG_IMG_URL
+        fetch("http://218.80.250.92:56679/healthy_service/healthy/dispatchV2",{method:'post',mode:"no-cor",body:enResult}).then(response => response.json()).then(responseData => {console.log(responseData);this.setState({
+            detailImg:responseData.data.DRUG_IMG_URL,
+            mainDetail:responseData.data,
+
         })} )
     }
 
     render(){
+        var mainDetail = this.state.mainDetail;
         return (
-            <div className="detailCarousel" style={{width:'100%',height:'300px'}}>
+            <div className="detailCarousel" style={{width:'100%',height:'100%'}}>
                 <NavBar1/>
                 <div className="body">
                     <Carousel
@@ -57,7 +62,7 @@ export default class ProductsDetail extends Component {
 
                             return (<img
                                 className="carouselImg"
-                                style={{height:'370px'}}
+                                style={styles.img}
                                 key={index}
                                 src={ii}
                                 alt="icon"
@@ -71,11 +76,61 @@ export default class ProductsDetail extends Component {
                             />)
                         })}
                     </Carousel>
+                    <div className="mainDetail">
+                        <h5 style={{color:'red',fontSize:'16px'}}>¥：{mainDetail.DRUG_PRICE}</h5>
+                        <span style={{backgroundColor:'red',color:'white',marginRight:'10px',}}>正品保障</span>
+                        <span style={{display:mainDetail.IS_OTC === '1'?'inline-block':'none',border:'1px solid green',color:'green',}}>OTC</span>
+                        <h4>{mainDetail.DRUG_SUPPLIER_NAME}</h4>
+                        <h3 style={{fontSize:'16px'}}>{mainDetail.NAME}</h3>
+                        <a style={{marginRight:'5px'}}>运费：¥{mainDetail.DRUG_SHIP}</a>
+                        <strong style={{marginRight:'5px'}}>月销：{mainDetail.BUY_COUNT}</strong>
+                        <em>库存：{mainDetail.DRUG_STORE}</em>
+                    </div>
                 </div>
-
+                <Footer/>
 
             </div>
         )
+    }
+}
+
+class Footer extends Component {
+    render(){
+        return(
+            <div className="addCart" style={styles.addCart}>
+                <div className="addToCart" style={styles.addToCart}>
+                    加入购物车
+                </div>
+                <div className="buyNow" style={styles.buyNow}>
+                    立即购买
+                </div>
+            </div>
+            )
+
+    }
+}
+
+const styles = {
+    img:{
+        width:'100%',
+        height:'3.75rem!important',
+    },
+    addCart:{
+        display:'flex',
+        position:'absolute',
+        left:0,
+        bottom:0,
+        width:'100%',
+        lineHeight:'44px',
+        textAlign:'center',
+    },
+    addToCart:{
+        flex:1,
+        backgroundColor:'orange',
+    },
+    buyNow:{
+        flex:1,
+        backgroundColor:'red',
     }
 }
 

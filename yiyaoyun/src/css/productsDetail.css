@@ -6,3 +6,15 @@
     left:0;
     top:0;
 }
+.slider-frame {
+    height: 100% !important;
+}
+
+.slider-list{
+    height:100%!important;
+}
+
+.carouselImg {
+    width:100%;
+    height:500px!important;
+}
