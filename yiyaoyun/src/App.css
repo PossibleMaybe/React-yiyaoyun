@@ -20,8 +20,17 @@ h1,h2,h3,h4,h5,em,strong{
 .App {
   text-align: center;
 }
+
 #root {
   width:100%;
+  height:100%;
+}
+
+
+html,body{
+  height:100%;
+}
+#root{
   height:100%;
 }
 

@@ -6,6 +6,7 @@
     left:0;
     top:0;
 }
+
 .slider-frame {
     height: 100% !important;
 }
@@ -15,6 +16,11 @@
 }
 
 .carouselImg {
-    width:100%;
-    height:500px!important;
+    width: 100%;
+    height: 500px !important;
+}
+.am-badge {
+    top:-30px !important;
+    right:0 !important;
+
 }

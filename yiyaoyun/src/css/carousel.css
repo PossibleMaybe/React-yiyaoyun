@@ -1,4 +1,8 @@
 @charset "UTF-8";
 .myCarousel{
-    height:500px!important;
+
+
+
+    height:200px!important;
+    position: relative;
 }

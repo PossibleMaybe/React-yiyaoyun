@@ -7,10 +7,13 @@ import { Carousel } from 'antd-mobile';
 import './css/productsDetail.css';
 import {strEnc,GLOBAL_URL} from './config/des';
 import {source,insureCode} from './config/config';
-
+import {connect} from 'react-redux';
 
 
 import NavBar1 from './Components/NavBar';
+
+import {store} from './redux/stores/store';
+import {addToCart as action} from './redux/actions/action';
 
 var reg = /(\d)+/;
 
@@ -18,17 +21,25 @@ var DRUGSUPPLIERCODE = 'haoyaoshi';
 var userID = '13771537698';
 var DRUGCODE;
 
-export default class ProductsDetail extends Component {
+class ProductsDetail extends Component {
     constructor(props){
         super(props);
         this.state = {
             detailImg:[],
             mainDetail:{},
-        }
+            unsubscribe:function(){
+
+            },
+        };
+
+        console.log('props:',props);
+        const {num,addItem} = props;
+        console.log(num,addItem);
     }
 
 
     componentWillMount(){
+
         var goodsid = window.location.hash;
         DRUGCODE =reg.exec(goodsid)[0];
 
@@ -37,18 +48,43 @@ export default class ProductsDetail extends Component {
         console.log(DRUGSUPPLIERCODE);
         var enResult = strEnc("[{\"groupCode\":\"" + insureCode + "\",\"drugCode\":\"" + DRUGCODE + "\",\"pharmacyCode\":\"" + DRUGSUPPLIERCODE + "\",\"yyyCode\":\"100013\"}]", "100001", "", "");
 
-        fetch("http://218.80.250.92:56679/healthy_service/healthy/dispatchV2",{method:'post',mode:"no-cor",body:enResult}).then(response => response.json()).then(responseData => {console.log(responseData);this.setState({
+        fetch("http://218.80.250.92:56679/healthy_service/healthy/dispatchV2",{method:'post',mode:"no-cor",body:enResult}).then(response => response.json()).then(responseData => {
+            console.log(responseData);
+            this.setState({
             detailImg:responseData.data.DRUG_IMG_URL,
             mainDetail:responseData.data,
 
-        })} )
+            });
+
+        });
+
+    }
+    componentDidMount(){
+
+         this.subscribe();
+
+    }
+    subscribe(){
+        var unsubscribe = store.subscribe(()=>{
+            console.log('subscribe');
+            console.log(DRUGCODE,this.state.detailImg[0]);
+            var localDetail = {
+                drugcode:DRUGCODE,
+                img:this.state.detailImg[0],
+            };
+            localStorage.setItem('localDetail',JSON.stringify([localDetail]));
+        });
+        return unsubscribe;
+    }
+    componentWillUnmount(){
+        this.subscribe()();
     }
 
     render(){
         var mainDetail = this.state.mainDetail;
         return (
             <div className="detailCarousel" style={{width:'100%',height:'100%'}}>
-                <NavBar1/>
+                <NavBar1 num={this.props.num}/>
                 <div className="body">
                     <Carousel
                         className="myCarousel"
@@ -87,7 +123,8 @@ export default class ProductsDetail extends Component {
                         <em>库存：{mainDetail.DRUG_STORE}</em>
                     </div>
                 </div>
-                <Footer/>
+
+                <Footer addItem={this.props.addItem}/>
 
             </div>
         )
@@ -95,10 +132,37 @@ export default class ProductsDetail extends Component {
 }
 
 class Footer extends Component {
+    constructor(props){
+        super(props)
+
+    }
+
+
     render(){
         return(
             <div className="addCart" style={styles.addCart}>
-                <div className="addToCart" style={styles.addToCart}>
+                <div className="addToCart" style={styles.addToCart} onClick={()=>{
+                    var object = JSON.parse(localStorage.getItem('localDetail'));
+
+
+                    console.log(store.getState());
+                    var status = store.getState().goods;
+                    var alreadySatus = 1;
+                    console.log('status',status,DRUGCODE);
+                    for(let i= 0;i<status.length;i++){
+                        if(status[i].drugcode === DRUGCODE){
+                            alreadySatus = 0;
+                        }
+                    }
+
+                    if(alreadySatus){
+                        console.log('tianjia');
+                        console.log()
+                        return this.props.addItem(object);
+                    }
+
+
+                }}>
                     加入购物车
                 </div>
                 <div className="buyNow" style={styles.buyNow}>
@@ -108,6 +172,8 @@ class Footer extends Component {
             )
 
     }
+
+
 }
 
 const styles = {
@@ -132,5 +198,25 @@ const styles = {
         flex:1,
         backgroundColor:'red',
     }
+};
+
+function mapStateToProps(state){
+    console.log(state);
+     return {
+       num:state.num,
+    }
 }
+
+function mapDispatchToProps(dispatch){
+    return {
+        addItem:(object)=>dispatch(action(object))
+
+
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(ProductsDetail);
 
